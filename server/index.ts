@@ -47,16 +47,16 @@ app.use((req, res, next) => {
     throw err;
   });
 
+  // Listen on correct Railway port
+  const port = parseInt(process.env.PORT || "5000", 10);
+  const server = app.listen(port, "0.0.0.0", () => {
+    log(`✅ Server listening on port ${port}`);
+  });
+
   // Serve frontend
   if (app.get("env") === "development") {
-    await setupVite(app); // no server needed
+    await setupVite(app, server);
   } else {
     serveStatic(app);
   }
-
-  // Listen on correct Railway port
-  const port = parseInt(process.env.PORT || "5000", 10);
-  app.listen(port, "0.0.0.0", () => {
-    log(`✅ Server listening on port ${port}`);
-  });
 })();
